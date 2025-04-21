@@ -4,49 +4,40 @@
 PossNessUMAP
 ====
 
-PossNessUMAP is a modification of UMAP incorporating possibility–necessity theory into neighborhood graphs and embeddings. 
-It extends UMAP for enhanced uncertainty modeling.
+PossNessUMAP is a novel modification of UMAP that incorporates possibility–necessity theory into the construction of neighborhood graphs and embeddings.
+This extension aims to provide more expressive uncertainty modeling while retaining UMAP's scalability and interpretability.
 
-PossNessUMAP modifies UMAP in the following ways:
+**Core Modifications:**
 
 - Replaces fuzzy membership strength with possibility–necessity-based similarity.
-- Replaces compute_membership_strengths with compute_membership_strengths_possibility_necessity.
-- Replaces smooth_knn_dist with smooth_knn_dist_possibility_necessity.
-- Adds tunable parameters (`alpha`, `beta`, `sharpness`) to control edge weights.
-- Retains all UMAP APIs and structure for easy drop-in replacement.
+- Replaces `compute_membership_strengths` with `compute_membership_strengths_possibility_necessity`.
+- Replaces `smooth_knn_dist` with `smooth_knn_dist_possibility_necessity`.
+- Adds tunable parameters (`alpha`, `beta`, `sharpness`) for precise control of edge weights.
+- Fully compatible with UMAP APIs; supports seamless drop-in replacement.
 
 ===
-UMAP
+UMAP Overview
 ===
-Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction
-technique that can be used for visualisation similarly to t-SNE, but also for
-general non-linear dimension reduction. The algorithm is founded on three
-assumptions about the data:
+Uniform Manifold Approximation and Projection (UMAP) is a non-linear dimension reduction technique useful for both visualization and general-purpose reduction. UMAP relies on the following assumptions:
 
-1. The data is uniformly distributed on a Riemannian manifold;
-2. The Riemannian metric is locally constant (or can be approximated as such);
+1. The data lies on a Riemannian manifold.
+2. The Riemannian metric is locally constant.
 3. The manifold is locally connected.
 
-From these assumptions it is possible to model the manifold with a fuzzy
-topological structure. The embedding is found by searching for a low dimensional
-projection of the data that has the closest possible equivalent fuzzy
-topological structure.
-
-
+From these assumptions, UMAP models the data's structure using a fuzzy topological representation and finds a low-dimensional embedding with equivalent structure.
 
 ----------
 Installing
 ----------
-pip install git+https://github.com/vikkyak/pnumap.git
+To install PossNessUMAP:
 
-PNUMAP depends similar to UMAP upon ``scikit-learn``, and thus ``scikit-learn``'s dependencies
-such as ``numpy`` and ``scipy``. UMAP adds a requirement for ``numba`` for
-performance reasons. The original version used Cython, but the improved code
-clarity, simplicity and performance of Numba made the transition necessary.
+.. code:: bash
 
-Requirements:
+    pip install git+https://github.com/vikkyak/pnumap.git
 
-* Python 3.6 or greater
+**Requirements:**
+
+* Python >= 3.6
 * numpy
 * scipy
 * scikit-learn
@@ -54,22 +45,21 @@ Requirements:
 * tqdm
 * `pynndescent <https://github.com/lmcinnes/pynndescent>`_
 
-Recommended packages:
+**Recommended (for plotting):**
 
-* For plotting
-   * matplotlib
-   * datashader
-   * holoviews
-* for Parametric PNUMAP
-   * tensorflow > 2.0.0
+* matplotlib
+* datashader
+* holoviews
 
+**For Parametric PNUMAP (optional):**
 
----------------
-How to use PNUMAP
----------------
+* tensorflow >= 2.0.0
 
-The umap package inherits from sklearn classes, and thus drops in neatly
-next to other sklearn transformers with an identical calling API.
+----------------------
+How to Use PossNessUMAP
+----------------------
+
+PossNessUMAP integrates seamlessly with the scikit-learn API:
 
 .. code:: python
 
@@ -77,27 +67,13 @@ next to other sklearn transformers with an identical calling API.
     from sklearn.datasets import load_digits
 
     digits = load_digits()
-
     embedding = pnumap.PossNessUMAP().fit_transform(digits.data)
 
-There are a number of parameters that can be set for the UMAP class; the
-major ones are as follows:
+**Key Parameters (same as UMAP):**
 
- -  ``n_neighbors``: This determines the number of neighboring points used in
-    local approximations of manifold structure. Larger values will result in
-    more global structure being preserved at the loss of detailed local
-    structure. In general this parameter should often be in the range 5 to
-    50, with a choice of 10 to 15 being a sensible default.
-
- -  ``min_dist``: This controls how tightly the embedding is allowed compress
-    points together. Larger values ensure embedded points are more evenly
-    distributed, while smaller values allow the algorithm to optimise more
-    accurately with regard to local structure. Sensible values are in the
-    range 0.001 to 0.5, with 0.1 being a reasonable default.
-
- -  ``metric``: This determines the choice of metric used to measure distance
-    in the input space. A wide variety of metrics are already coded, and a user
-    defined function can be passed as long as it has been JITd by numba.
+- ``n_neighbors``: Number of neighbors used in local manifold approximation. [5–50, default: 15]
+- ``min_dist``: Controls how tightly points are packed in low-dimensional space. [0.001–0.5, default: 0.1]
+- ``metric``: Distance metric (e.g., 'euclidean', 'cosine').
 
 =========================
 PossNessUMAP Parameters
@@ -106,26 +82,18 @@ PossNessUMAP Parameters
 +------------+------------------+-------------------------------------------------------------+
 | Parameter  | Typical Range    | Description                                                 |
 +============+==================+=============================================================+
-| alpha      | 0.5 to 10        | Controls possibility influence; higher values → possibility |
-|            |                  | dominates.                                                  |
+| alpha      | 0.5 to 10        | Controls possibility influence; higher values → possibility dominates. |
 +------------+------------------+-------------------------------------------------------------+
-| beta       | 0.1 to 2         | Controls necessity influence; higher values → necessity     |
-|            |                  | dominates.                                                  |
+| beta       | 0.1 to 2         | Controls necessity influence; higher values → necessity dominates.     |
 +------------+------------------+-------------------------------------------------------------+
-| sharpness  | 1 to 50 (log)    | Controls confidence decay steepness (soft → hard gating).   |
+| sharpness  | 1 to 50 (log)    | Controls confidence decay steepness (soft → hard gating).           |
 +------------+------------------+-------------------------------------------------------------+
 
+-----------------------------
+Basic Example: Digits Dataset
+-----------------------------
 
-
-An example of making use of these options:
-
-.. code:: python
-
-=============================
-Basic Example with Digits Dataset
-=============================
-
-PossNessUMAP can be used as a drop-in replacement for UMAP. Here is a quick example using scikit-learn’s built-in digits dataset:
+PossNessUMAP can be used as a direct replacement for UMAP. Here's a simple example:
 
 .. code:: python
 
@@ -134,32 +102,21 @@ PossNessUMAP can be used as a drop-in replacement for UMAP. Here is a quick exam
     from pnumap import PossNessUMAP
     import matplotlib.pyplot as plt
 
-    # Load and scale data
     digits = load_digits()
     X = scale(digits.data)
     y = digits.target
 
-    # Fit PossNessUMAP
     reducer = PossNessUMAP(random_state=42)
     embedding = reducer.fit_transform(X)
 
-    # Visualize the embedding
     plt.scatter(embedding[:, 0], embedding[:, 1], c=y, cmap='Spectral', s=5)
     plt.colorbar(boundaries=range(11))
     plt.title('PossNessUMAP projection of the Digits dataset')
     plt.show()
 
-
-
-
-
-An example of making use of these options (based on a subsample of the mnist_784 dataset):
-
-.. code:: python
-
-   =============================
+---------------------------------
 Quickstart: MNIST with PossNessUMAP
-=============================
+---------------------------------
 
 Install dependencies:
 
@@ -167,7 +124,7 @@ Install dependencies:
 
     pip install pnumap scikit-learn matplotlib pandas
 
-Then try the following example:
+Then try:
 
 .. code:: python
 
@@ -177,13 +134,11 @@ Then try the following example:
     import pandas as pd
     import matplotlib.pyplot as plt
 
-    # Load and preprocess MNIST
     mnist = fetch_openml('mnist_784', version=1, as_frame=False)
-    X = mnist.data / 255.0  # Normalize pixel values to [0, 1]
+    X = mnist.data / 255.0
     y = pd.Series(mnist.target)
-    X_scaled = StandardScaler().fit_transform(X)  # Standard scaling
+    X_scaled = StandardScaler().fit_transform(X)
 
-    # Initialize and fit PossNessUMAP
     reducer = PossNessUMAP(
         n_neighbors=15,
         n_components=2,
@@ -195,14 +150,9 @@ Then try the following example:
     )
     embedding = reducer.fit_transform(X_scaled)
 
-    # Encode labels and plot
     y_codes = y.astype('category').cat.codes
     plt.scatter(embedding[:, 0], embedding[:, 1], c=y_codes, cmap='Spectral', s=5)
     plt.colorbar()
     plt.title('PossNessUMAP projection of the MNIST dataset')
     plt.show()
-
-
-
-
 
