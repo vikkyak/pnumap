@@ -67,32 +67,7 @@ topological structure. The embedding is found by searching for a low dimensional
 projection of the data that has the closest possible equivalent fuzzy
 topological structure.
 
-The details for the underlying mathematics can be found in
-`our paper on ArXiv <https://arxiv.org/abs/1802.03426>`_:
 
-McInnes, L, Healy, J, *UMAP: Uniform Manifold Approximation and Projection
-for Dimension Reduction*, ArXiv e-prints 1802.03426, 2018
-
-A broader introduction to UMAP targetted the scientific community can be found 
-in our `paper published in Nature Review Methods Primers  <https://doi.org/10.1038/s43586-024-00363-x>`_:
-
-Healy, J., McInnes, L. *Uniform manifold approximation and projection*. Nat Rev Methods 
-Primers 4, 82 (2024). 
-
-A read only version of this paper can accessed via `link <https://rdcu.be/d0YZT>`_
-
-The important thing is that you don't need to worry about that—you can use
-UMAP right now for dimension reduction and visualisation as easily as a drop
-in replacement for scikit-learn's t-SNE.
-
-Documentation is `available via Read the Docs <https://umap-learn.readthedocs.io/>`_.
-
-**New: this package now also provides support for densMAP.** The densMAP algorithm augments UMAP
-to preserve local density information in addition to the topological structure of the data.
-Details of this method are described in the following `paper <https://doi.org/10.1038/s41587-020-00801-7>`_:
-
-Narayan, A, Berger, B, Cho, H, *Assessing Single-Cell Transcriptomic Variability
-through Density-Preserving Data Visualization*, Nature Biotechnology, 2021
 
 ----------
 Installing
