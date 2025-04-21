@@ -121,34 +121,34 @@ An example of making use of these options:
 
 .. code:: python
 
-    import pnumap
-    from sklearn.datasets import load_digits
+=============================
+Basic Example with Digits Dataset
+=============================
 
-    digits = load_digits()
-
-    embedding = PossNessUMAP(n_neighbors=5,
-                          min_dist=0.3,
-                          metric='correlation').fit_transform(digits.data)
-
-UMAP also supports fitting to sparse matrix data. For more details
-please see `the UMAP documentation <https://umap-learn.readthedocs.io/>`_
-
-
-
+PossNessUMAP can be used as a drop-in replacement for UMAP. Here is a quick example using scikit-learn’s built-in digits dataset:
 
 .. code:: python
 
-    import pnumap
-    import pnumap.plot
     from sklearn.datasets import load_digits
+    from sklearn.preprocessing import scale
+    from pnumap import PossNessUMAP
+    import matplotlib.pyplot as plt
 
+    # Load and scale data
     digits = load_digits()
+    X = scale(digits.data)
+    y = digits.target
 
-    mapper = PossNessUMAP().fit(digits.data)
-    pnumap.plot.points(mapper, labels=digits.target)
+    # Fit PossNessUMAP
+    reducer = PossNessUMAP(random_state=42)
+    embedding = reducer.fit_transform(X)
 
-The plotting package offers basic plots, as well as interactive plots with hover
-tools and various diagnostic plotting options. See the documentation for more details.
+    # Visualize the embedding
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=y, cmap='Spectral', s=5)
+    plt.colorbar(boundaries=range(11))
+    plt.title('PossNessUMAP projection of the Digits dataset')
+    plt.show()
+
 
 
 
