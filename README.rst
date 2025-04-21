@@ -99,10 +99,22 @@ major ones are as follows:
     in the input space. A wide variety of metrics are already coded, and a user
     defined function can be passed as long as it has been JITd by numba.
 
-Parameter | Typical Range | Description
-alpha | 0.5 to 10 | Controls possibility influence; higher values → possibility dominates
-beta | 0.1 to 2 | Controls necessity influence; higher values → necessity dominates
-sharpness | 1 to 50 (log scale) | Controls confidence decay steepness (like soft transition → hard cutoff)
+=========================
+PossNessUMAP Parameters
+=========================
+
++------------+------------------+-------------------------------------------------------------+
+| Parameter  | Typical Range    | Description                                                 |
++============+==================+=============================================================+
+| alpha      | 0.5 to 10        | Controls possibility influence; higher values → possibility |
+|            |                  | dominates.                                                  |
++------------+------------------+-------------------------------------------------------------+
+| beta       | 0.1 to 2         | Controls necessity influence; higher values → necessity     |
+|            |                  | dominates.                                                  |
++------------+------------------+-------------------------------------------------------------+
+| sharpness  | 1 to 50 (log)    | Controls confidence decay steepness (soft → hard gating).   |
++------------+------------------+-------------------------------------------------------------+
+
 
 
 An example of making use of these options:
