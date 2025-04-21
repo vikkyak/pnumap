@@ -215,6 +215,4 @@ Suppressing Warnings and Comparing with UMAP, t-SNE, PCA
 
 
 
-[console_scripts]
-pnumap = pnumap.__main__:main
 
