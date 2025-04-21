@@ -170,6 +170,7 @@ Suppressing Warnings and Comparing with UMAP, t-SNE, PCA
     from sklearn.preprocessing import StandardScaler
     from sklearn.manifold import TSNE
     from sklearn.decomposition import PCA
+    from sklearn.metrics import silhouette_score
     from umap import UMAP
     from pnumap import PossNessUMAP
 
@@ -189,6 +190,7 @@ Suppressing Warnings and Comparing with UMAP, t-SNE, PCA
         X = mnist.data / 255.0
         y = pd.Series(mnist.target)
         X_scaled = StandardScaler().fit_transform(X)
+        y_codes = y.astype('category').cat.codes
 
         reducers = {
             "PossNessUMAP": PossNessUMAP(alpha=2.0, beta=1.0, sharpness=5.0, random_state=42),
@@ -198,16 +200,21 @@ Suppressing Warnings and Comparing with UMAP, t-SNE, PCA
         }
 
         embeddings = {name: reducer.fit_transform(X_scaled) for name, reducer in reducers.items()}
+        scores = {name: silhouette_score(embed, y_codes) for name, embed in embeddings.items()}
 
-    y_codes = y.astype('category').cat.codes
     plt.figure(figsize=(12, 10))
     for i, (name, embedding) in enumerate(embeddings.items()):
         plt.subplot(2, 2, i + 1)
         plt.scatter(embedding[:, 0], embedding[:, 1], c=y_codes, cmap='Spectral', s=5)
-        plt.title(f'{name} projection')
+        plt.title(f'{name} (Silhouette = {scores[name]:.3f})')
         plt.xticks([])
         plt.yticks([])
 
     plt.tight_layout()
     plt.show()
+
+
+
+[console_scripts]
+pnumap = pnumap.__main__:main
 
