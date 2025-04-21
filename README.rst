@@ -1,40 +1,5 @@
 .. -*- mode: rst -*-
 
-|pypi_version|_ |pypi_downloads|_
-
-|conda_version|_ |conda_downloads|_
-
-|License|_ |build_status|_ |Coverage|_
-
-|Docs|_ |joss_paper|_
-
-.. |pypi_version| image:: https://img.shields.io/pypi/v/umap-learn.svg
-.. _pypi_version: https://pypi.python.org/pypi/umap-learn/
-
-.. |pypi_downloads| image:: https://pepy.tech/badge/umap-learn/month
-.. _pypi_downloads: https://pepy.tech/project/umap-learn
-
-.. |conda_version| image:: https://anaconda.org/conda-forge/umap-learn/badges/version.svg
-.. _conda_version: https://anaconda.org/conda-forge/umap-learn
-
-.. |conda_downloads| image:: https://anaconda.org/conda-forge/umap-learn/badges/downloads.svg
-.. _conda_downloads: https://anaconda.org/conda-forge/umap-learn
-
-.. |License| image:: https://img.shields.io/pypi/l/umap-learn.svg
-.. _License: https://github.com/lmcinnes/umap/blob/master/LICENSE.txt
-
-.. |build_status| image:: https://dev.azure.com/TutteInstitute/build-pipelines/_apis/build/status/lmcinnes.umap?branchName=master
-.. _build_status: https://dev.azure.com/TutteInstitute/build-pipelines/_build/latest?definitionId=2&branchName=master
-
-.. |Coverage| image:: https://coveralls.io/repos/github/lmcinnes/umap/badge.svg
-.. _Coverage: https://coveralls.io/github/lmcinnes/umap
-
-.. |Docs| image:: https://readthedocs.org/projects/umap-learn/badge/?version=latest
-.. _Docs: https://umap-learn.readthedocs.io/en/latest/?badge=latest
-
-.. |joss_paper| image:: http://joss.theoj.org/papers/10.21105/joss.00861/status.svg
-.. _joss_paper: https://doi.org/10.21105/joss.00861
-
 ====
 PossNessUMAP
 ====
@@ -72,6 +37,7 @@ topological structure.
 ----------
 Installing
 ----------
+pip install git+https://github.com/vikkyak/pnumap.git
 
 PNUMAP depends similar to UMAP upon ``scikit-learn``, and thus ``scikit-learn``'s dependencies
 such as ``numpy`` and ``scipy``. UMAP adds a requirement for ``numba`` for
@@ -97,81 +63,9 @@ Recommended packages:
 * for Parametric PNUMAP
    * tensorflow > 2.0.0
 
-**Install Options**
-
-Conda install, via the excellent work of the conda-forge team:
-
-.. code:: bash
-
-    conda install -c conda-forge umap-learn
-
-The conda-forge packages are available for Linux, OS X, and Windows 64 bit.
-
-PyPI install, presuming you have numba and sklearn and all its requirements
-(numpy and scipy) installed:
-
-.. code:: bash
-
-    pip install umap-learn
-
-If you wish to use the plotting functionality you can use
-
-.. code:: bash
-
-    pip install umap-learn[plot]
-
-to install all the plotting dependencies.
-
-If you wish to use Parametric UMAP, you need to install Tensorflow, which can be
-installed either using the instructions at https://www.tensorflow.org/install
-(recommended) or using
-
-.. code:: bash
-
-    pip install umap-learn[parametric_umap]
-
-for a CPU-only version of Tensorflow.
-
-If you're on an x86 processor, you can also optionally install `tbb`, which will
-provide additional CPU optimizations:
-
-.. code:: bash
-
-    pip install umap-learn[tbb]
-
-If pip is having difficulties pulling the dependencies then we'd suggest installing
-the dependencies manually using anaconda followed by pulling umap from pip:
-
-.. code:: bash
-
-    conda install numpy scipy
-    conda install scikit-learn
-    conda install numba
-    pip install umap-learn
-
-For a manual install get this package:
-
-.. code:: bash
-
-    wget https://github.com/lmcinnes/umap/archive/master.zip
-    unzip master.zip
-    rm master.zip
-    cd umap-master
-
-Optionally, install the requirements through Conda:
-
-.. code:: bash
-
-    conda install scikit-learn numba
-
-Then install the package
-
-.. code:: bash
-
-    python -m pip install -e .
 
 ---------------
-How to use UMAP
+How to use PNUMAP
 ---------------
 
 The umap package inherits from sklearn classes, and thus drops in neatly
@@ -179,12 +73,12 @@ next to other sklearn transformers with an identical calling API.
 
 .. code:: python
 
-    import umap
+    import pnumap
     from sklearn.datasets import load_digits
 
     digits = load_digits()
 
-    embedding = umap.UMAP().fit_transform(digits.data)
+    embedding = pnumap.PossNessUMAP().fit_transform(digits.data)
 
 There are a number of parameters that can be set for the UMAP class; the
 major ones are as follows:
@@ -204,6 +98,12 @@ major ones are as follows:
  -  ``metric``: This determines the choice of metric used to measure distance
     in the input space. A wide variety of metrics are already coded, and a user
     defined function can be passed as long as it has been JITd by numba.
+
+Parameter | Typical Range | Description
+alpha | 0.5 to 10 | Controls possibility influence; higher values → possibility dominates
+beta | 0.1 to 2 | Controls necessity influence; higher values → necessity dominates
+sharpness | 1 to 50 (log scale) | Controls confidence decay steepness (like soft transition → hard cutoff)
+
 
 An example of making use of these options:
 
