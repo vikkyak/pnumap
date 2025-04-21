@@ -73,7 +73,7 @@ topological structure.
 Installing
 ----------
 
-UMAP depends upon ``scikit-learn``, and thus ``scikit-learn``'s dependencies
+PNUMAP depends similar to UMAP upon ``scikit-learn``, and thus ``scikit-learn``'s dependencies
 such as ``numpy`` and ``scipy``. UMAP adds a requirement for ``numba`` for
 performance reasons. The original version used Cython, but the improved code
 clarity, simplicity and performance of Numba made the transition necessary.
@@ -94,7 +94,7 @@ Recommended packages:
    * matplotlib
    * datashader
    * holoviews
-* for Parametric UMAP
+* for Parametric PNUMAP
    * tensorflow > 2.0.0
 
 **Install Options**
