@@ -157,16 +157,51 @@ An example of making use of these options (based on a subsample of the mnist_784
 
 .. code:: python
 
-    import pnumap
+   =============================
+Quickstart: MNIST with PossNessUMAP
+=============================
+
+Install dependencies:
+
+.. code:: bash
+
+    pip install pnumap scikit-learn matplotlib pandas
+
+Then try the following example:
+
+.. code:: python
+
     from sklearn.datasets import fetch_openml
-    from sklearn.utils import resample
+    from sklearn.preprocessing import StandardScaler
+    from pnumap import PossNessUMAP
+    import pandas as pd
+    import matplotlib.pyplot as plt
 
-    digits = fetch_openml(name='mnist_784')
-    subsample, subsample_labels = resample(digits.data, digits.target, n_samples=7000,
-                                           stratify=digits.target, random_state=1)
+    # Load and preprocess MNIST
+    mnist = fetch_openml('mnist_784', version=1, as_frame=False)
+    X = mnist.data / 255.0  # Normalize pixel values to [0, 1]
+    y = pd.Series(mnist.target)
+    X_scaled = StandardScaler().fit_transform(X)  # Standard scaling
 
-    embedding, r_orig, r_emb = PossNessUMAP(densmap=True, dens_lambda=2.0, n_neighbors=30,
-                                         output_dens=True).fit_transform(subsample)
+    # Initialize and fit PossNessUMAP
+    reducer = PossNessUMAP(
+        n_neighbors=15,
+        n_components=2,
+        metric='euclidean',
+        sharpness=5.0,
+        alpha=2.0,
+        beta=1.0,
+        random_state=42
+    )
+    embedding = reducer.fit_transform(X_scaled)
+
+    # Encode labels and plot
+    y_codes = y.astype('category').cat.codes
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=y_codes, cmap='Spectral', s=5)
+    plt.colorbar()
+    plt.title('PossNessUMAP projection of the MNIST dataset')
+    plt.show()
+
 
 
 
