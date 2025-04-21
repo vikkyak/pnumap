@@ -126,7 +126,7 @@ An example of making use of these options:
 
     digits = load_digits()
 
-    embedding = pnumap.PossNessUMAP(n_neighbors=5,
+    embedding = PossNessUMAP(n_neighbors=5,
                           min_dist=0.3,
                           metric='correlation').fit_transform(digits.data)
 
@@ -144,7 +144,7 @@ please see `the UMAP documentation <https://umap-learn.readthedocs.io/>`_
 
     digits = load_digits()
 
-    mapper = pnumap.PossNessUMAP().fit(digits.data)
+    mapper = PossNessUMAP().fit(digits.data)
     pnumap.plot.points(mapper, labels=digits.target)
 
 The plotting package offers basic plots, as well as interactive plots with hover
@@ -165,7 +165,7 @@ An example of making use of these options (based on a subsample of the mnist_784
     subsample, subsample_labels = resample(digits.data, digits.target, n_samples=7000,
                                            stratify=digits.target, random_state=1)
 
-    embedding, r_orig, r_emb = pnumap.PossNessUMAP(densmap=True, dens_lambda=2.0, n_neighbors=30,
+    embedding, r_orig, r_emb = PossNessUMAP(densmap=True, dens_lambda=2.0, n_neighbors=30,
                                          output_dens=True).fit_transform(subsample)
 
 
